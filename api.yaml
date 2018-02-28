@@ -7,7 +7,7 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: http://api.internetofdrums.com/api/1.0
+  - url: http://api.internetofdrums.com/1.0
 paths:
   /patterns:
     get:
