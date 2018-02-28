@@ -1,0 +1,221 @@
+openapi: "3.0.0"
+info:
+  title: Internet Drum Pattern Service
+  version: 1.0.0
+  description: A service for congesting and serving internet drum patterns.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://api.internetofdrums.com/api/1.0
+paths:
+  /patterns:
+    get:
+      operationId: listPatternQueue
+      summary: Lists the pattern queue.
+      description: >
+        This operation will list the queue of internet drum patterns in order, 
+        with the oldest internet drum pattern listed first, and the newest at 
+        the end of the queue.
+      responses: 
+        '200':
+          description: The current queue of internet drum patterns.
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/DrumPatternList'
+        default: 
+          description: Unexpected error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: enqueuePattern
+      summary: Adds a new internet drum pattern to the queue.
+      description: >
+        This operation enqueues the provided internet drum pattern, meaning it 
+        will be added at the back of the internet drum pattern queue.
+      requestBody:
+        description: Details of the pattern to add to the queue.
+        required: true
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/NewDrumPattern'
+      responses:
+        '201':
+          description: >
+            The internet drum pattern was successfully added to the queue.
+          headers:
+            Location:
+              description: >
+                The location of the newly created internet drum pattern.
+              schema:
+                type: string
+                format: uri 
+        '400':
+          description: The pattern could not be correctly parsed. 
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+        default: 
+          description: Unexpected error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+  /patterns/head:
+    get:
+      operationId: dequeuePattern
+      summary: Returns the the first internet drum pattern in the queue. 
+      description: >
+        This operation returns some details of the first internet drum pattern 
+        in line (e.g. the oldest pattern). Its ID can be used to fetch its full
+        details, including its drum pattern data.
+      responses: 
+        '200':
+          description: The head of the pattern queue.
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ListedDrumPattern'
+        default: 
+          description: Unexpected error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+  /patterns/{id}:
+    get:
+      operationId: getPattern
+      summary: Returns the details of a single internet drum pattern.
+      description: >
+        This operation will list the details of a single internet drum 
+        pattern.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the drum pattern to return.
+          schema:
+            type: string
+            format: uuid
+      responses: 
+        '200':
+          description: The details of the internet drum pattern.
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/DetailedDrumPattern'
+        '404':
+          description: The internet drum pattern could not be found. 
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+        default: 
+          description: Unexpected error
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: dequeuePattern
+      summary: Removes the internet drum pattern from the queue.
+      description: >
+        This operation removes the specified internet drum pattern from the 
+        queue and returns its details.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the drum pattern to return.
+          schema:
+            type: string
+            format: uuid
+      responses: 
+        '200':
+          description: > 
+            The details of the internet drum pattern that has just been 
+            removed from the queue.
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/DetailedDrumPattern'
+        '404':
+          description: The internet drum pattern could not be found. 
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+        default: 
+          description: Unexpected error/
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    UniversallyUnique:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: The universally unique identifier.
+          type: string
+          format: uuid
+    Named:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          description: The name.
+          type: string
+          maxLength: 32
+          pattern: '^[a-zA-Z0-9 ]+$'
+    DrumPatternData:
+      type: object
+      required:
+        - pattern
+      properties:
+        pattern:
+          description: >
+            The base64-encoded internet drum pattern data, adhering to the 
+            Internet Drum Pattern Specification.
+          type: string
+          minLength: 684
+          maxLength: 684
+          format: byte
+    NewDrumPattern:
+      allOf:
+        - $ref: '#/components/schemas/Named'
+        - $ref: '#/components/schemas/DrumPatternData'
+    ListedDrumPattern:
+      allOf:
+        - $ref: '#/components/schemas/UniversallyUnique'
+        - $ref: '#/components/schemas/Named'
+    DetailedDrumPattern:
+      allOf:
+        - $ref: '#/components/schemas/UniversallyUnique'
+        - $ref: '#/components/schemas/Named'
+        - $ref: '#/components/schemas/DrumPatternData'
+    DrumPatternList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ListedDrumPattern'
+    Error:
+      type: object
+      required: 
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      
