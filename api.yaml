@@ -11,12 +11,14 @@ servers:
 paths:
   /patterns:
     get:
-      operationId: listPatternQueue
-      summary: Lists the pattern queue.
+      operationId: listQueue
+      summary: Lists all internet drum patterns currently in the queue.
       description: >
         This operation will list the queue of internet drum patterns in order, 
         with the oldest internet drum pattern listed first, and the newest at 
-        the end of the queue.
+        the end of the queue. If the queue is empty, it returns an empty list.
+      tags:
+        - patterns
       responses: 
         '200':
           description: The current queue of internet drum patterns.
@@ -31,11 +33,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      operationId: enqueuePattern
-      summary: Adds a new internet drum pattern to the queue.
+      operationId: offerToQueue
+      summary: Tries to insert a new internet drum pattern into the queue.
       description: >
-        This operation enqueues the provided internet drum pattern, meaning it 
-        will be added at the back of the internet drum pattern queue.
+        This operation inserts the provided internet drum pattern to the queue
+        if it is possible. If the queue is currently full, the pattern is not 
+        added.
+      tags:
+        - patterns
       requestBody:
         description: Details of the pattern to add to the queue.
         required: true
@@ -54,6 +59,10 @@ paths:
               schema:
                 type: string
                 format: uri 
+        '202':
+          description: >
+            The internet drum pattern could not be added to the queue currently,
+            because the queue is currently full. 
         '400':
           description: The pattern could not be correctly parsed. 
           content: 
@@ -68,49 +77,24 @@ paths:
                 $ref: '#/components/schemas/Error'
   /patterns/head:
     get:
-      operationId: dequeuePattern
-      summary: Returns the the first internet drum pattern in the queue. 
+      operationId: getHeadOfQueue
+      summary: Returns the head of the internet drum pattern queue. 
       description: >
-        This operation returns some details of the first internet drum pattern 
-        in line (e.g. the oldest pattern). Its ID can be used to fetch its full
-        details, including its drum pattern data.
+        This operation returns the first internet drum pattern in line (e.g. 
+        the head of the queue), similar to a queue peek operation. It does not 
+        remove the pattern from the queue. If the queue is currently empty, the 
+        operation returns nothing.
+      tags:
+        - patterns
       responses: 
         '200':
           description: The head of the pattern queue.
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/ListedDrumPattern'
-        default: 
-          description: Unexpected error
-          content: 
-            application/json: 
-              schema:
-                $ref: '#/components/schemas/Error'
-  /patterns/{id}:
-    get:
-      operationId: getPattern
-      summary: Returns the details of a single internet drum pattern.
-      description: >
-        This operation will list the details of a single internet drum 
-        pattern.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The id of the drum pattern to return.
-          schema:
-            type: string
-            format: uuid
-      responses: 
-        '200':
-          description: The details of the internet drum pattern.
-          content:
-            application/json: 
-              schema:
                 $ref: '#/components/schemas/DetailedDrumPattern'
         '404':
-          description: The internet drum pattern could not be found. 
+          description: The queue is currently empty.
           content: 
             application/json: 
               schema:
@@ -122,36 +106,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      operationId: dequeuePattern
-      summary: Removes the internet drum pattern from the queue.
+      operationId: getAndRemoveHeadOfQueue
+      summary: Removes and returns the head of the internet drum pattern queue. 
       description: >
-        This operation removes the specified internet drum pattern from the 
-        queue and returns its details.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The id of the drum pattern to return.
-          schema:
-            type: string
-            format: uuid
+        This operation removes and returns the first internet drum pattern in 
+        line (e.g. the head of the queue), similar to polling a queue.
+        If the queue is currently empty, the operation returns nothing.
+      tags:
+        - patterns
       responses: 
         '200':
-          description: > 
-            The details of the internet drum pattern that has just been 
-            removed from the queue.
+          description: The head of the pattern queue.
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/DetailedDrumPattern'
         '404':
-          description: The internet drum pattern could not be found. 
+          description: The queue is currently empty.
           content: 
             application/json: 
               schema:
                 $ref: '#/components/schemas/Error'
         default: 
-          description: Unexpected error/
+          description: Unexpected error
           content: 
             application/json: 
               schema:
