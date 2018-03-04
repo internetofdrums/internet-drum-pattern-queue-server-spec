@@ -6,6 +6,13 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: Piet van Dongen
+    url: http://www.pietvandongen.com
+    email: piet@pietvandongen.com
+tags:
+  - name: patterns
+    description: All operations regarding internet drum patterns
 servers:
   - url: http://api.internetofdrums.com/1.0
 paths:
