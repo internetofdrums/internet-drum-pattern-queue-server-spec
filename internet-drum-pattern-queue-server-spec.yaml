@@ -2,7 +2,7 @@ openapi: "3.0.1"
 info:
   title: Internet Drum Pattern Service
   version: 1.0.0
-  description: A service for congesting and serving internet drum patterns.
+  description: A service for ingesting and serving internet drum patterns.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
