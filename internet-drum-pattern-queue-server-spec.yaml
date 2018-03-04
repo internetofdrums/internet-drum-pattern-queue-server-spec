@@ -21,22 +21,22 @@ paths:
       operationId: listQueue
       summary: Lists all internet drum patterns currently in the queue.
       description: >
-        This operation will list the queue of internet drum patterns in order, 
-        with the oldest internet drum pattern listed first, and the newest at 
+        This operation will list the queue of internet drum patterns in order,
+        with the oldest internet drum pattern listed first, and the newest at
         the end of the queue. If the queue is empty, it returns an empty list.
       tags:
         - patterns
-      responses: 
+      responses:
         '200':
           description: The current queue of internet drum patterns.
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/DrumPatternList'
-        default: 
+        default:
           description: Unexpected error.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
@@ -44,7 +44,7 @@ paths:
       summary: Tries to insert a new internet drum pattern into the queue.
       description: >
         This operation inserts the provided internet drum pattern to the queue
-        if it is possible. If the queue is currently full, the pattern is not 
+        if it is possible. If the queue is currently full, the pattern is not
         added.
       tags:
         - patterns
@@ -52,8 +52,8 @@ paths:
         description: Details of the pattern to add to the queue.
         required: true
         content:
-          application/json: 
-            schema: 
+          application/json:
+            schema:
               $ref: '#/components/schemas/NewDrumPattern'
       responses:
         '201':
@@ -65,85 +65,85 @@ paths:
                 The location of the newly created internet drum pattern.
               schema:
                 type: string
-                format: uri 
+                format: uri
         '202':
           description: >
             The internet drum pattern could not be added to the queue currently,
-            because the queue is currently full. 
+            because the queue is currently full.
         '400':
-          description: The pattern could not be correctly parsed. 
-          content: 
-            application/json: 
+          description: The pattern could not be correctly parsed.
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '422':
-          description: The pattern is already in the queue. 
-          content: 
-            application/json: 
+          description: The pattern is already in the queue.
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        default: 
+        default:
           description: Unexpected error.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
   /patterns/head:
     get:
       operationId: getHeadOfQueue
-      summary: Returns the head of the internet drum pattern queue. 
+      summary: Returns the head of the internet drum pattern queue.
       description: >
-        This operation returns the first internet drum pattern in line (e.g. 
-        the head of the queue), similar to a queue peek operation. It does not 
-        remove the pattern from the queue. If the queue is currently empty, the 
+        This operation returns the first internet drum pattern in line (e.g.
+        the head of the queue), similar to a queue peek operation. It does not
+        remove the pattern from the queue. If the queue is currently empty, the
         operation returns nothing.
       tags:
         - patterns
-      responses: 
+      responses:
         '200':
           description: The head of the pattern queue.
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/DetailedDrumPattern'
         '404':
           description: The queue is currently empty.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        default: 
+        default:
           description: Unexpected error.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
       operationId: getAndRemoveHeadOfQueue
-      summary: Removes and returns the head of the internet drum pattern queue. 
+      summary: Removes and returns the head of the internet drum pattern queue.
       description: >
-        This operation removes and returns the first internet drum pattern in 
+        This operation removes and returns the first internet drum pattern in
         line (e.g. the head of the queue), similar to polling a queue.
         If the queue is currently empty, the operation returns nothing.
       tags:
         - patterns
-      responses: 
+      responses:
         '200':
           description: The head of the pattern queue.
           content:
-            application/json: 
+            application/json:
               schema:
                 $ref: '#/components/schemas/DetailedDrumPattern'
         '404':
           description: The queue is currently empty.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        default: 
+        default:
           description: Unexpected error.
-          content: 
-            application/json: 
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
@@ -174,7 +174,7 @@ components:
       properties:
         pattern:
           description: >
-            The base64-encoded internet drum pattern data, adhering to the 
+            The base64-encoded internet drum pattern data, adhering to the
             Internet Drum Pattern Specification.
           type: string
           minLength: 684
@@ -199,7 +199,7 @@ components:
         $ref: '#/components/schemas/ListedDrumPattern'
     Error:
       type: object
-      required: 
+      required:
         - code
         - message
       properties:
@@ -208,4 +208,3 @@ components:
           format: int32
         message:
           type: string
-      

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The specification for a remote API ingesting and serving internet drum patterns.",
   "scripts": {
-    "test": "node ./node_modules/speccy/speccy.js lint -r strict internet-drum-pattern-queue-server-spec.yaml"
+    "test": "node ./node_modules/yaml-lint/cli.js --schema=FAILSAFE_SCHEMA internet-drum-pattern-queue-server-spec.yaml && node ./node_modules/lintspaces-cli/index.js -n -t -l 2 -d spaces ./internet-drum-pattern-queue-server-spec.yaml && node ./node_modules/speccy/speccy.js lint -r strict internet-drum-pattern-queue-server-spec.yaml"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/internetofdrums/internet-drum-pattern-queue-server-spec#readme",
   "devDependencies": {
-    "speccy": "0.4.0"
+    "lintspaces-cli": "0.6.0",
+    "speccy": "0.4.0",
+    "yaml-lint": "1.2.1"
   },
   "dependencies": {}
 }
