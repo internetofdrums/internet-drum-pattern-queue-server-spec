@@ -14,11 +14,32 @@ info:
     url: http://www.pietvandongen.com
     email: piet@pietvandongen.com
 tags:
+  - name: health
+    description: All operations regarding web service health.
   - name: patterns
-    description: All operations regarding internet drum patterns
+    description: All operations regarding internet drum patterns.
 servers:
   - url: http://api.internetofdrums.com/1.0
 paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Indicates API health status.
+      description: >
+        This operation informs the user of the web service's status. If the
+        endpoint is reachable and returns correctly, the service can be
+        considered healthy. If not, the service cannot be trusted to be healthy.
+      tags:
+        - health
+      responses:
+        '200':
+          description: The API can be considered healthy.
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /patterns:
     get:
       operationId: listQueue
