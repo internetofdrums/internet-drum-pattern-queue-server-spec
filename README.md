@@ -9,5 +9,10 @@ The specification adheres to the [OpenAPI Specification][2], version 3.0.1.
 
 [![Build Status](https://travis-ci.org/internetofdrums/internet-drum-pattern-queue-server-spec.svg?branch=master)](https://travis-ci.org/internetofdrums/internet-drum-pattern-queue-server-spec)
 
+## Documentation website
+
+You can [view the latest version of the API documenation online][3].
+
 [1]: https://github.com/internetofdrums/internet-drum-pattern-spec
 [2]: https://github.com/OAI/OpenAPI-Specification
+[3]: https://internetofdrums.github.io/internet-drum-pattern-queue-server-spec/
