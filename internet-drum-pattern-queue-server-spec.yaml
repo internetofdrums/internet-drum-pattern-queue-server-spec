@@ -1,8 +1,11 @@
 openapi: "3.0.1"
 info:
-  title: Internet Drum Pattern Service
+  title: Internet Drum Pattern Queue Service API
   version: 1.0.0
-  description: A service for ingesting and serving internet drum patterns.
+  description: >
+    A web service for ingesting and serving internet drum patterns. The service
+    behaves as a queue for internet drum patterns. Users can add patterns to the
+    queue, peek or remove the head of the queue and list the whole queue.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
