@@ -11,7 +11,7 @@ The specification adheres to the [OpenAPI Specification][2], version 3.0.1.
 
 ## Documentation website
 
-You can [view the latest version of the API documenation online][3].
+You can [view the latest version of the API documentation online][3].
 
 [1]: https://github.com/internetofdrums/internet-drum-pattern-spec
 [2]: https://github.com/OAI/OpenAPI-Specification
