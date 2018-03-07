@@ -83,13 +83,6 @@ paths:
         '201':
           description: >
             The internet drum pattern was successfully added to the queue.
-          headers:
-            Location:
-              description: >
-                The location of the newly created internet drum pattern.
-              schema:
-                type: string
-                format: uri
         '202':
           description: >
             The internet drum pattern could not be added to the queue currently,
