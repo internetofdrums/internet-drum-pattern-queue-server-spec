@@ -163,6 +163,65 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /patterns/head/pattern:
+    get:
+      operationId: getHeadOfQueuePattern
+      summary: Returns the head of the drum pattern queue's pattern data.
+      description: >
+        This operation returns the pattern data of the first internet drum
+        pattern in line (e.g. the head of the queue), similar to a queue peek
+        operation. It does not remove the pattern from the queue.
+        If the queue is currently empty, the operation returns nothing.
+      tags:
+        - patterns
+      responses:
+        '200':
+          description: The drum pattern data of the head of the pattern queue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrumPatternData'
+        '404':
+          description: The queue is currently empty.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: getPatternAndRemoveHeadOfQueue
+      summary: Returns the queue head's pattern data and removes the pattern.
+      description: >
+        This operation returns the pattern data of the first internet drum
+        pattern in line (e.g. the head of the queue) and removes the pattern
+        itself, similar to polling a queue. If the queue is currently empty,
+        the operation returns nothing.
+      tags:
+        - patterns
+      responses:
+        '200':
+          description: The head of the pattern queue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrumPatternData'
+        '404':
+          description: The queue is currently empty.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     UniversallyUnique:
@@ -194,8 +253,8 @@ components:
             The base64-encoded internet drum pattern data, adhering to the
             Internet Drum Pattern Specification.
           type: string
-          minLength: 684
-          maxLength: 684
+          minLength: 256
+          maxLength: 256
           format: byte
     NewDrumPattern:
       allOf:
