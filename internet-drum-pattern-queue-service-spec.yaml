@@ -87,18 +87,31 @@ paths:
           description: >
             The internet drum pattern could not be added to the queue currently,
             because the queue is currently full.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                queueCurrentlyFull:
+                  $ref: '#/components/examples/queueCurrentlyFull'
         '400':
           description: The pattern could not be correctly parsed.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                patternCouldNotBeParsed:
+                  $ref: '#/components/examples/patternCouldNotBeParsed'
         '422':
           description: The pattern is already in the queue.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                patternAlreadyPresent:
+                  $ref: '#/components/examples/patternAlreadyPresent'
         default:
           description: Unexpected error.
           content:
@@ -129,6 +142,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                queueCurrentlyEmpty:
+                  $ref: '#/components/examples/queueCurrentlyEmpty'
         default:
           description: Unexpected error.
           content:
@@ -157,6 +173,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                queueCurrentlyEmpty:
+                  $ref: '#/components/examples/queueCurrentlyEmpty'
         default:
           description: Unexpected error.
           content:
@@ -187,6 +206,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                queueCurrentlyEmpty:
+                  $ref: '#/components/examples/queueCurrentlyEmpty'
         default:
           description: Unexpected error.
           content:
@@ -216,6 +238,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                queueCurrentlyEmpty:
+                  $ref: '#/components/examples/queueCurrentlyEmpty'
         default:
           description: Unexpected error.
           content:
@@ -233,6 +258,7 @@ components:
           description: The universally unique identifier.
           type: string
           format: uuid
+          example: "5342a9b2-0510-4d84-be48-3b32b8fc7a50"
     Named:
       type: object
       required:
@@ -243,6 +269,7 @@ components:
           type: string
           maxLength: 32
           pattern: '^[a-zA-Z0-9 ]+$'
+          example: "Billie Jean"
     DrumPatternData:
       type: object
       required:
@@ -256,6 +283,7 @@ components:
           minLength: 256
           maxLength: 256
           format: byte
+          example: "fwAAAH8AAAB/AAAAfwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfwAAAAAAAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfwB/AH8AfwB/AH8AfwB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     NewDrumPattern:
       allOf:
         - $ref: '#/components/schemas/Named'
@@ -280,3 +308,29 @@ components:
       properties:
         message:
           type: string
+          example: "The resource could not be found."
+  examples:
+    queueCurrentlyFull:
+      summary: The pattern could not be added to the queue, because the queue is currently full.
+      value:
+        {
+          "message": "The pattern could not be added to the queue, because the queue is currently full."
+        }
+    patternCouldNotBeParsed:
+      summary: The pattern could not be correctly parsed.
+      value:
+        {
+          "message": "The pattern could not be correctly parsed."
+        }
+    patternAlreadyPresent:
+      summary: The pattern is already present in the queue.
+      value:
+        {
+          "message": "The pattern is already present in the queue."
+        }
+    queueCurrentlyEmpty:
+      summary: The queue is currently empty.
+      value:
+        {
+          "message": "The queue is currently empty."
+        }
